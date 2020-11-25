@@ -1,0 +1,77 @@
+body {
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+h1 {
+    text-align: left;
+    margin-left: 6%;
+}
+.flex-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: center;
+    margin: 0;
+}
+p.big-word {
+    font-size: 32pt;
+    font-weight: bold;
+    margin: 20px;
+}
+.small-form {
+    display: flex;
+    flex-direction: column;
+    width: 30vw;
+    border: 2px solid #444;
+    border-radius: 8px;
+    padding: 8px 14px;
+
+}
+.form-title {
+    font-size: 1.8em;
+    font-weight: bold;
+}
+.form-line {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 2px 0;
+}
+.form-line label {
+    vertical-align: middle;
+    font-size: 1.5em;
+}
+.form-line input, .form-line select {
+    font-size: 1.5em;
+    width: 50%;
+    line-height: 2em;
+    height: 2em;
+    box-sizing: border-box;
+}
+.small-form input[type="submit"] {
+    margin: 10px 0;
+    font-size: 20px;
+}
+#join-id {
+    text-transform: uppercase;
+}
+
+@media (max-aspect-ratio: 1/1) {
+    h1 {
+        margin-left: 0;
+        text-align: center;
+    }
+    .small-form {
+        width: 70vw;
+    }
+    .flex-container {
+        flex-direction: column;
+    }
+}

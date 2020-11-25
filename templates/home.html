@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Chinese Checkers</title>
+        <meta charset="utf-8"/>
+        
+        <script type="text/javascript" src="{{ url_for('static', filename='home.js')}}">
+        </script>
+        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"/>
+    </head>
+    <body>
+        <h1>Welcome to AI Checkers!</h2>
+        <div class="flex-container">
+            <form id="join-game" class="small-form" action="javascript:void(0);">
+                <h2 class="form-title">Join Game</h2>
+                
+                <div class="form-line">
+                    <label for="join-id">Game ID</label>
+                    <input name="join-id" id="join-id" maxlength=5 size=5 pattern="[A-Za-z]{5}" placeholder="XXXXX" required>
+                </div>
+                
+                <input type="submit" value="Join!">
+            </form>
+
+            <p class="big-word" > OR</p>
+
+            <form id="create-game" class="small-form" method="POST" action="/api/game/create">
+                <h2 class="form-title">Create Game</h2>
+               
+                <div class="form-line">
+                    <label for="players">Players</label>
+                    <select name="players" id="players">
+                        <option value=2>2</option>
+                        <option value=3>3</option>
+                        <option value=4>4</option>
+                        <option value=6>6</option>
+                    </select>
+                </div>
+               
+                <div class="form-line">
+                    <label for="time">Time Limit</label>
+                    <input name="time" id="time" required value=0 min=0 type="number">
+                </div>
+
+                <input type="submit" value="Create!">
+            </form>
+        </div>
+
+    </body>
+
+</html>
