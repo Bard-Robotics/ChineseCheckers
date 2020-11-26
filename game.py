@@ -1,26 +1,31 @@
 import numpy as np
 
 class CheckersGame():
-
-    def __init__(self, board, to_move, time_limit=None):
+    
+    PLAYER_COLOR = {
+        2: [1, 4],
+        3: [1, 3, 5],
+        4: [1, 3, 4, 6],
+        6: [1, 2, 3, 4, 5, 6]
+    }
+    def __init__(self, board, to_move):
+        # The board is a numpy array so that we can copy it really fast
         self.board = np.copy(board)
-        self.game_over = False # Maybe check this based on the board..?
+        self.game_over = False
         self.n_players = len(np.unique(board)) - 2
         self.player_turn = to_move
-        # Should the board be a python list or a numpy array?
-        # Numpy will probably be faster -- especially since during tree search we'll have to copy() it a lot.
         assert self.n_players in [2, 3, 4, 6]
-        assert self.player_turn <= self.n_players
+        assert 0 <= self.player_turn < self.n_players
 
     @classmethod
-    def new_game(cls, n_players, time_limit=None):
+    def new_game(cls, n_players):
         # Initialize the board to the default state
         board = np.array(
                 [[BOARD_INT_MAP[c] for c in r] for r in BOARD_STR.splitlines()],
             dtype=np.int8)
         # cls is basically going to be CheckersGame
         # so calling CheckersGame.new_game(n) is going to call CheckersGame(board, 0) down here
-        return cls(board, 1, time_limit=time_limit)
+        return cls(board, 0)
 
     def move(self, move):
         # Given a move, (ie, a piece location and a destination)
@@ -59,7 +64,7 @@ BOARD_STR = """\
 ..........111....
 ...........11....
 ............1...."""
-# I want to zero-index the players, but instead I'm going to make 0 be the empty space
+# I want to zero-index the colors, but instead I'm going to make 0 be the empty space
 BOARD_INT_MAP = {
     '.': -1, 'o': 0,
     '1': 1, '2': 2, '3': 3,
