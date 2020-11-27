@@ -4,8 +4,7 @@ function attachListeners() {
         let id = document.getElementById("join-id").value.toUpperCase()
         let room_url = `/room/${id}`
         // Check if it exists
-        fetch(room_url, {method: "HEAD"})
-            
+        fetch(room_url, {method: "HEAD"})            
             .then(resp => {
                 if (resp.ok)
                     window.location.href = room_url

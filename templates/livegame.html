@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Chinese Checkers</title>
+        <meta charset="utf-8"/>
+       
+        <script type="text/javascript">GAME_ID = "{{ game_id }}";</script>
+        <script type="text/javascript" src="{{ url_for('static', filename='livegame.js')}}"></script>
+        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"/>
+    </head>
+    <body>
+
+        <canvas id="canvas" width="600" height="600"></canvas>
+
+    </body>
+</html>
