@@ -78,7 +78,7 @@ POST /api/game/<ROOM_ID>/move
 Authorization: Bearer <TOKEN>
 
 {
-    "move": [] // I'm still deciding the move encoding
+    "move": {"start": [y1, x1], "end": [y2, x2]}
 }
 ```
 Where `<TOKEN>` is the token you were returned when you joined the room.
