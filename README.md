@@ -54,9 +54,26 @@ GET /api/game/<ROOM_ID>
 Response:
 ```json
 {
-    // I'm still deciding the details here, haha
+    "board": [ [...], ..., [...] ],
+    "n_players": n,
+    "time_limit": s,
+    "state": "waiting" | "finished" | "playing"
 }
 ```
+Additionally, each `state` value has an extra field that accompanies it.
+
+In the `waiting` state, the `joined` field indicates the number of players already in the lobby.
+
+In the `finished` state, the `winner` field indicates the index (or color?) of the player who won.
+
+In the `playing` state, the `turn` field indicates the index of the player whose turn it is.
+
+The `board` is a 2D array indicating the current location of all pieces, with elements coded as follows.
+| **value** |  **piece**                |
+|-----------|---------------------------|
+|   -1      | Not part of the board     |
+|    0      | Empty square              |
+|   1-6     | Player-movable game piece |
 
 #### Making a move:
 ```http

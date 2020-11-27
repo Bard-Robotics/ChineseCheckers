@@ -46,7 +46,24 @@ def apiGameState(game_id):
     """Return the current state of a game, encoded as JSON."""
     if game_id not in games:
         abort(404)
-    return dict()
+    room = games[game_id]
+    # Maybe we also want like, "last move"?
+    info = dict(board = room.game.board.tolist(),
+            n_players = room.game.n_players)
+    if room.time_limit > 0:
+        info["time_limit"] = room.time_limit
+
+    # Indicate the state of the game
+    if not room.full():
+        info["state"] = "waiting"
+        info["joined"] = len(room.game.players)
+    elif room.game.winner is not None:
+        info["state"] = "finished"
+        info["winner"] = room.game.winner
+    else:
+        info["state"] = "playing"
+        info["turn"] = room.game.player_turn
+    return info
 
 @app.route("/api/game/<string:game_id>/join", methods=["POST"])
 def apiGameJoin(game_id):
@@ -92,7 +109,7 @@ def apiGameMove(game_id):
     room.checkTimer()
     game.move(move)
     
-    return {}, 200
+    return ''
 
 # This is a static method; it's not routed to any endpoint
 def generateId(existing):

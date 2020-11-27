@@ -11,7 +11,7 @@ class CheckersGame():
     def __init__(self, board, to_move):
         # The board is a numpy array so that we can copy it really fast
         self.board = np.copy(board)
-        self.game_over = False
+        self.winner = None
         self.n_players = len(np.unique(board)) - 2
         self.player_turn = to_move
         assert self.n_players in [2, 3, 4, 6]
