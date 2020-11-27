@@ -43,6 +43,7 @@ The *player* index is which player you are, in turn order. See the following tab
 | 3 | 1, 3, 5          |
 | 4 | 1, 3, 4, 6       |
 | 6 | 1, 2, 3, 4, 5, 6 |
+
 So if you are assigned the index `2` in a 4-player game, then your pieces are colored `4`.
 
 #### Getting the state of a game:
