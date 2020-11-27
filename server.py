@@ -101,18 +101,18 @@ def apiGameMove(game_id):
     # OK. The user's authentication is valid.
     # We know that it's their turn.
     # Now we can ask the game class if this move is legal.
-    if not request.json or "move" not in request.json:
+    try:
+        # Now we can make the move!
+        start = tuple(request.json["move"]["start"])
+        end   = tuple(request.json["move"]["end"])
+        room.checkTimer()
+        game.move(start, end)
+    except:
         abort(400)
-    move = payload["move"]
-    if not game.is_legal(move):
-        abort(400)
-    # Now we can make the move!
-    room.checkTimer()
-    game.move(move)
     
     return ''
 
-# This is a static method; it's not routed to any endpoint
+# This is a helper function; it's not routed to any endpoint
 def generateId(existing):
     """Generate a random 5-letter ID that's not already in a list."""
     # There are 11 million strings of five letters
