@@ -65,9 +65,8 @@ class CheckersGame():
         """Determines whether a move is legal.
            Does not check turn order.
         """
-        return self._index_on_board(start)             \
-                and self._index_on_board(end)          \
-                and self._board[start] > 0             \
+        return self.board(end) == 0                    \
+                and self.board(start) > 0              \
                 and self._check_zone_locks(start, end) \
                 and self.exists_path(start, end)
     
