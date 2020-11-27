@@ -57,6 +57,7 @@ Response:
     "board": [ [...], ..., [...] ],
     "n_players": n,
     "time_limit": s,
+    "last_played": t,
     "state": "waiting" | "finished" | "playing"
 }
 ```

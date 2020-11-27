@@ -22,7 +22,7 @@ def gameRoom(game_id):
         abort(404)
     room = games[game_id]
     # When we render, we need to embed the game's info in the page's javascript
-    return render_template('livegame.html')
+    return render_template('livegame.html', game_id = game_id)
 
 @app.route("/api/game/create", methods=["POST"])
 def apiGameCreate():
@@ -50,7 +50,8 @@ def apiGameState(game_id):
     room = games[game_id]
     # Maybe we also want like, "last move"?
     info = dict(board = room.game._board.tolist(),
-            n_players = room.game.n_players)
+            n_players = room.game.n_players,
+            last_played = room.last_move)
     if room.time_limit > 0:
         info["time_limit"] = room.time_limit
 
