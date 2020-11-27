@@ -18,7 +18,7 @@ class Room:
         assert not self.full()
         # The bearer token is a 32 character string, where the last character is the player index
         # This just makes sure we'll never have two players in one room with the same token
-        auth = choices(Room.AUTH_CORPUS, k=31) + str(self.players.length)
+        auth = ''.join(choices(Room.AUTH_CORPUS, k=31)) + str(len(self.players))
         self.players.append(auth)
         return (len(self.players) - 1, auth)
 

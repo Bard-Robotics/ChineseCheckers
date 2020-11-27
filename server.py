@@ -49,7 +49,7 @@ def apiGameState(game_id):
         abort(404)
     room = games[game_id]
     # Maybe we also want like, "last move"?
-    info = dict(board = room.game.board.tolist(),
+    info = dict(board = room.game._board.tolist(),
             n_players = room.game.n_players)
     if room.time_limit > 0:
         info["time_limit"] = room.time_limit
