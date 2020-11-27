@@ -95,11 +95,18 @@ class CheckersGame():
         yield from (p for p in adj if self.board(p) == 0)
         # Now we check repeated hops.
         # We do this by a breadth first search.
+
+        #TODO: Consensus on legality of hopping back to start and "skipping"
         visited = set(adj)
         to_visit = [start]
         while len(to_visit):
             pt = to_visit.pop(0)
-            yield pt
+
+            # We have to actually move a piece
+            # But this stops us from considering "start" even if we can
+            #   make some hops and get back to start
+            if pt is not start:
+                yield pt
             
             visited.add(pt)
             # Compute the hop directions
