@@ -20,7 +20,7 @@ POST /api/game/create
 }
 ```
 Returns `400` if the number of players isn't specified (the turn time limit is optional).
-On sucess, returns a redirect to the newly created room.
+On success, returns a redirect to the newly created room.
 
 #### Joining a room:
 ```http
@@ -29,15 +29,15 @@ POST /api/game/<ROOM_ID>/join
 
 Returns `400` if the room is already full.
 Success response:
-```json
+```
 {
     "player": index,
     "token": token
 }
 ```
-The *token* must be saved in order to authenticate your moves later. 
+The *token* must be saved in order to authenticate your moves later.   
 The *player* index is which player you are, in turn order. See the following table for the colors that are used depending on the number of players:
-| # | colors           |
+| # | Colors           |
 |---|------------------|
 | 2 | 1, 4             |
 | 3 | 1, 3, 5          |
@@ -52,7 +52,7 @@ GET /api/game/<ROOM_ID>
 ```
 
 Response:
-```json
+```
 {
     "board": [ [...], ..., [...] ],
     "n_players": n,
@@ -60,20 +60,17 @@ Response:
     "state": "waiting" | "finished" | "playing"
 }
 ```
-Additionally, each `state` value has an extra field that accompanies it.
-
-In the `waiting` state, the `joined` field indicates the number of players already in the lobby.
-
-In the `finished` state, the `winner` field indicates the index (or color?) of the player who won.
-
+Additionally, each `state` value has an extra field that accompanies it.  
+In the `waiting` state, the `joined` field indicates the number of players already in the lobby.  
+In the `finished` state, the `winner` field indicates the index (or color?) of the player who won.  
 In the `playing` state, the `turn` field indicates the index of the player whose turn it is.
 
 The `board` is a 2D array indicating the current location of all pieces, with elements coded as follows.
-| **value** |  **piece**                |
-|-----------|---------------------------|
-|   -1      | Not part of the board     |
-|    0      | Empty square              |
-|   1-6     | Player-movable game piece |
+| Value | Piece                     |
+|-------|---------------------------|
+|  -1   | Not part of the board     |
+|   0   | Empty square              |
+|  1-6  | Player-movable game piece |
 
 #### Making a move:
 ```http
@@ -86,7 +83,7 @@ Authorization: Bearer <TOKEN>
 ```
 Where `<TOKEN>` is the token you were returned when you joined the room.
 
-If the token is not provided correctly, returns `401`.
-If the token doesn't match the player whose turn it is, or if the game is over or hasn't started, returns `403`.
-If the specified move is illegal, returns `400`.
+If the token is not provided correctly, returns `401`.  
+If the token doesn't match the player whose turn it is, or if the game is over or hasn't started, returns `403`.  
+If the specified move is illegal, returns `400`.  
 On success, returns `200` and no body.

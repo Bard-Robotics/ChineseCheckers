@@ -19,10 +19,10 @@ class CheckersGame():
 
     @classmethod
     def new_game(cls, n_players):
-        # Initialize the board to the default state
-        board = np.array(
-                [[BOARD_INT_MAP[c] for c in r] for r in BOARD_STR.splitlines()],
-            dtype=np.int8)
+        # All we're doing here is taking the default board and removing the tokens of players who aren't playing
+        colors = cls.PLAYER_COLOR[n_players]
+        remove_tokens = np.vectorize(lambda i: i if i in colors or i <= 0 else 0)
+        board = remove_tokens(FULL_BOARD)
         # cls is basically going to be CheckersGame
         # so calling CheckersGame.new_game(n) is going to call CheckersGame(board, 0) down here
         return cls(board, 0)
@@ -46,7 +46,7 @@ class CheckersGame():
         # By graph exploration.
         return []
 
-BOARD_STR = """\
+_BOARD_STR = """\
 ....4............
 ....44...........
 ....444..........
@@ -65,8 +65,11 @@ BOARD_STR = """\
 ...........11....
 ............1...."""
 # I want to zero-index the colors, but instead I'm going to make 0 be the empty space
-BOARD_INT_MAP = {
+_BOARD_INT_MAP = {
     '.': -1, 'o': 0,
     '1': 1, '2': 2, '3': 3,
     '4': 4, '5': 5, '6': 6
 }
+FULL_BOARD = np.array(
+    [[_BOARD_INT_MAP[c] for c in r] for r in _BOARD_STR.splitlines()],
+    dtype=np.int8)

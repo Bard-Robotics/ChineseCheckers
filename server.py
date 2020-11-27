@@ -1,4 +1,5 @@
 from game import CheckersGame
+from room import Room
 from string import ascii_uppercase
 from random import choices
 
@@ -56,7 +57,7 @@ def apiGameState(game_id):
     # Indicate the state of the game
     if not room.full():
         info["state"] = "waiting"
-        info["joined"] = len(room.game.players)
+        info["joined"] = len(room.players)
     elif room.game.winner is not None:
         info["state"] = "finished"
         info["winner"] = room.game.winner
