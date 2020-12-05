@@ -1,13 +1,35 @@
 # Chinese Checkers
 Chinese Checkers playground for AIs, with multiplayer online evaluation mode.
 
-## Objectives: 
-- Learn how use git 
-- Write Game Server
-  - Language (JS, Python)
-- Figure out standards for our online server.
+## Prequisite: 
+(software tools)
+- Git and Github
+- Python 
+- Flask, numpy, request library for useful purposes
+(concepts)
+- Basic understanding of http requests + client/server relationship 
 
-## HTTP Api Documentation:
+## Running the game: 
+Download the repository, enter from the command line and run command ```python server.py```. This will give you a web address running on your local server, paste it in a web browser to view the game board. 
+
+To interact with the server, get the room number ```ROOM_ID``` and web address ```HOST```. Run a client program (recommend using python or js) using the HTTP API to send requests to the game board. Here's a small sample program using the requests library in Python.
+
+```python
+import requests 
+roomid = "RGSHR"  # {GAME_ID}
+HOST = "http:" # {HOST}
+
+auth = requests.post(f"{HOST}/api/game/{roomid}/join")
+token = auth.json()["token"]
+
+requests.post(
+    f"{HOST}/api/game/{roomid}/move", 
+    headers={"Authorizatoin":f"Bearer{token}"}, 
+    json={   "move":{"start":[13,10],"end":[12,10]} }
+) 
+```
+
+## HTTP API Documentation:
 The API uses JSON and a very simple token-based authentication system.
 
 #### Creating a room:
@@ -88,3 +110,5 @@ If the token is not provided correctly, returns `401`.
 If the token doesn't match the player whose turn it is, or if the game is over or hasn't started, returns `403`.  
 If the specified move is illegal, returns `400`.  
 On success, returns `200` and no body.
+
+
