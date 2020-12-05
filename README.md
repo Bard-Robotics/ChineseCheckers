@@ -1,13 +1,13 @@
 # Chinese Checkers
 Chinese Checkers playground for AIs, with multiplayer online evaluation mode.
 
-## Prequisite: 
+### Prequisite
 - Git and Github
 - Python 
 - Flask, numpy, request library for useful purposes
 - Basic understanding of http requests + client/server relationship (conceptual)
 
-## Running the game: 
+## Running the game 
 Download the repository, enter from the command line and run command ```python server.py```. This will give you a web address running on your local server that looks like ```http://127.0.0.1:5000/```, paste it in a web browser to view the game board. 
 
 To interact with the server, get the room number ```ROOM_ID``` and web address ```HOST```. Run a client program (recommend using python or js) using the HTTP API to send requests to the game board. Here's a small sample program using the requests library in Python.
@@ -27,10 +27,10 @@ requests.post(
 ) 
 ```
 
-## HTTP API Documentation:
+## HTTP API Documentation
 The API uses JSON and a very simple token-based authentication system.
 
-#### Creating a room:
+#### Creating a room
 ```http
 POST /api/game/create
 
@@ -42,7 +42,7 @@ POST /api/game/create
 Returns `400` if the number of players isn't specified (the turn time limit is optional).
 On success, returns a redirect to the newly created room.
 
-#### Joining a room:
+#### Joining a room
 ```http
 POST /api/game/<ROOM_ID>/join
 ```
@@ -66,7 +66,7 @@ The *player* index is which player you are, in turn order. See the following tab
 
 So if you are assigned the index `2` in a 4-player game, then your pieces are colored `4`.
 
-#### Getting the state of a game:
+#### Getting the state of a game
 ```http
 GET /api/game/<ROOM_ID>
 ```
@@ -93,7 +93,7 @@ The `board` is a 2D array indicating the current location of all pieces, with el
 |   0   | Empty square              |
 |  1-6  | Player-movable game piece |
 
-#### Making a move:
+#### Making a move
 ```http
 POST /api/game/<ROOM_ID>/move
 Authorization: Bearer <TOKEN>
