@@ -3,7 +3,6 @@ from room import Room
 from string import ascii_uppercase
 from random import choices
 
-import flask
 from flask import Flask, render_template, abort, url_for, request, redirect
 
 app = Flask(__name__)
@@ -20,7 +19,6 @@ def gameRoom(game_id):
     """Serve a page where the user can see a live representation of a game."""
     if game_id not in games:
         abort(404)
-    room = games[game_id]
     # When we render, we need to embed the game's info in the page's javascript
     return render_template('livegame.html', game_id = game_id)
 
@@ -107,7 +105,7 @@ def apiGameMove(game_id):
         start = tuple(request.json["move"]["start"])
         end   = tuple(request.json["move"]["end"])
         room.checkTimer()
-        game.move(start, end)
+        room.game.move(start, end)
     except:
         abort(400)
     
