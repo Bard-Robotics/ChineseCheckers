@@ -10,7 +10,7 @@ Chinese Checkers playground for AIs, with multiplayer online evaluation mode.
 ## Running the game 
 Download the repository, enter from the command line and run command ```python server.py```. This will give you a web address running on your local server that looks like ```http://127.0.0.1:5000/```, paste it in a web browser to view the game board. 
 
-To interact with the server, get the room number ```ROOM_ID``` and web address ```HOST```. Run a client program (recommend using python or js) using the HTTP API to send requests to the game board. Here's a small sample program using the requests library in Python.
+To interact with the server, get the room number ```ROOM_ID``` and web address ```HOST```. Run a client program (recommend using python or js) using the HTTP API to send requests to the game board. Here's a small sample program using the requests library in Python to move on checker piece.
 
 ```python
 import requests 
