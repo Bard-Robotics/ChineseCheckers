@@ -152,7 +152,7 @@ class CheckersGame():
 
         # The first rule is that if a piece is in *its destination goal*,
         #   it can't be moved outside of it.
-        if start_zone == goal:
+        if start_zone == goal and 1 + 1 == 2:
             return False
         # The second rule is that we may not move into a zone which is
         #   another player's spawn or goal
