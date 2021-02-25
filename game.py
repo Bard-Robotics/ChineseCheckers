@@ -1,6 +1,9 @@
 import numpy as np
 
 class CheckersGame():
+    """
+    The state of one entire game board.
+    """
     
     PLAYER_COLOR = {
         2: [1, 4],
@@ -8,7 +11,7 @@ class CheckersGame():
         4: [1, 3, 4, 6],
         6: [1, 2, 3, 4, 5, 6]
     }
-    def __init__(self, board, to_move):
+    def __init__(self, board, to_move: int):
         # The board is a numpy array so that we can copy it really fast
         self._board = np.copy(board)
         self.winner = None
@@ -18,12 +21,18 @@ class CheckersGame():
         assert self.n_players in [2, 3, 4, 6]
         assert 0 <= self.player_turn < self.n_players
 
-    @staticmethod
-    def opposite(color):
-        return (color + 2) % 6 + 1
 
     @classmethod
-    def new_game(cls, n_players):
+    def new_game(cls, n_players: int):
+        """
+        Create a new game with the default board state.
+
+            Parameters: 
+                n_players (int): The number of players in the game.
+
+            Returns:
+                CheckersGame(...) with default board.
+        """
         # All we're doing here is taking the default board and removing the tokens of players who aren't playing
         colors = cls.PLAYER_COLOR[n_players]
         remove_tokens = np.vectorize(lambda i: i if i in colors or i <= 0 else 0)
@@ -32,15 +41,27 @@ class CheckersGame():
         # so calling CheckersGame.new_game(n) is going to call CheckersGame(board, 0) down here
         return cls(board, 0)
 
-    def move(self, start, end):
+    def move(self, start, end, verify=True) -> None:
+        """
+        Make a move inplace.
+
+            Parameters:
+                start (tuple): The location of the piece to be picked up.
+                end   (tuple): The place to put the new piece.
+                verify (bool): Whether or not to check legality of the move. Default: True. 
+                               Checking move legality is slow, so disabling verification
+                               during simulation or tree search for performance is helpful.
+
+        """
         # Given a move, (ie, a piece location and a destination)
         #  check if the specified piece belongs to the player whose turn it is
         #  check if the move is legal using pathfinding algorithm
         #  update the board to reflect the change
         #  check if this move causes the game to be over
-        assert self.is_legal(start, end)
-        assert self._board[start] == self.colors[self.player_turn]
-        assert self.winner is None
+        if verify:
+            assert self.is_legal(start, end)
+            assert self._board[start] == self.colors[self.player_turn]
+            assert self.winner is None
        
         # Move pieces
         self._board[end] = self._board[start]
@@ -61,9 +82,16 @@ class CheckersGame():
             # Otherwise it's the next player's turn
             self.player_turn = (self.player_turn + 1) % self.n_players
 
-    def is_legal(self, start, end):
+    def is_legal(self, start, end) -> bool:
         """Determines whether a move is legal.
            Does not check turn order.
+
+                Parameters:
+                    start (tuple): Starting piece location.
+                    end   (tuple): Ending piece location.
+
+                Returns:
+                    bool
         """
         return self.board(end) == 0                    \
                 and self.board(start) > 0              \
@@ -73,10 +101,16 @@ class CheckersGame():
     def get_legal(self, player):
         """Generator yielding the all legal moves for
            a certain player.
+
+                Parameters:
+                    player (int): Index of the player who is moving.
+
+                Returns:
+                    A generator yielding dicts of the form {"start": (y0, x0), "end": (y1, x1)}.
+
         """
-        for start in filter(
-                lambda k: self._board[k] == self.colors[player],
-                np.ndindex(self._board.shape)):
+        for start in map(tuple,
+                np.argwhere(self._board == self.colors[player])):
             yield from (
                     {"start": start, "end": end}
                     for end in self.paths(start)
@@ -87,6 +121,12 @@ class CheckersGame():
     def paths(self, start):
         """Generator that yields all the points that a given
            piece can move to by hopping or single-adjacency.
+
+                Parameters:
+                    start (tuple): Board location. There does not have to actually be a piece there.
+
+                Returns:
+                    Generator yielding (y, x) tuples of spaces that can be moved to.
         """
         # Unrolling 2-tuple addition will make it fast
         tupadd = lambda p, v: (p[0] + v[0], p[1] + v[1])
@@ -122,10 +162,7 @@ class CheckersGame():
         """Checks if it is possible to move a piece from
            the start to the end.
         """
-        for dest in self.paths(start):
-            if dest == end:
-                return True
-        return False
+        return end in self.paths(start)
 
     def _check_zone_locks(self, start, end):
         """There are various reasons that a piece may
@@ -178,6 +215,10 @@ class CheckersGame():
         return '\n'.join(
                 ''.join(" " if i == -1 else "o" if i == 0 else str(i) for i in row)
                 for row in b)
+
+    @staticmethod
+    def opposite(color):
+        return (color + 2) % 6 + 1
 
 
 # Fixed board layout
