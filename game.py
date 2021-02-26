@@ -5,7 +5,7 @@ class CheckersGame():
     The state of one entire game board.
     """
    
-    opposite = [0, 2, 1, -1]
+    opposite = [0, 2, 1]
 
     def __init__(self, board = None, to_move: int = 1):
         # The board is a numpy array so that we can copy it really fast
@@ -180,42 +180,28 @@ class CheckersGame():
         b = self._board.tolist()
         
         return '\n'.join(
-                ''.join(" " if i == -1 else "o" if i == 0 else str(i) for i in row)
+                ''.join("o" if i == 0 else str(i) for i in row)
                 for row in b)
 
 # Fixed board layout
 _BOARD_STR = """\
-2........
-22.......
-222......
-2222.....
-ooooo....
-oooooo...
-ooooooo..
-oooooooo.
-ooooooooo
-.oooooooo
-..ooooooo
-...oooooo
-....ooooo
-.....1111
-......111
-.......11
-........1"""
+222200000
+222000000
+220000000
+200000000
+000000000
+000000001
+000000011
+000000111
+000001111"""
 # I want to zero-index the colors, but instead I'm going to make 0 be the empty space
-_BOARD_INT_MAP = {
-    '.': -1, 'o': 0,
-    '1': 1, '2': 2,
-}
 FULL_BOARD = np.array(
-    [[_BOARD_INT_MAP[c] for c in r] for r in _BOARD_STR.splitlines()],
+    [[ int(c) for c in r] for r in _BOARD_STR.splitlines()],
     dtype=np.int8)
 
 START_ZONES = [[] for _ in range(3)]
 for ind in np.ndindex(FULL_BOARD.shape):
     col = FULL_BOARD[ind]
-    if col == -1:
-        continue
     START_ZONES[col].append(ind)
 
 DIRECTIONS = [
@@ -223,6 +209,6 @@ DIRECTIONS = [
     (1, 0),
     (0, -1),
     (0, 1),
-    (-1, -1),
-    (1, 1)
+    (-1, 1),
+    (1, -1)
 ]
