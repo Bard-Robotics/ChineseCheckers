@@ -11,7 +11,7 @@ Chinese Checkers playground for AIs, with multiplayer online evaluation mode.
 The API uses JSON and a very simple token-based authentication system. 
 
 Note that the number of players has been locked at 2 in the game logic, but I haven't gotten around to updating the server. Sorry.
-=======
+
 ## Running the game 
 Download the repository, enter from the command line and run command ```python server.py```. This will give you a web address running on your local server that looks like ```http://127.0.0.1:5000/```, paste it in a web browser to view the game board. 
 
@@ -118,5 +118,4 @@ Another way to use this library is to run offline CPU tournaments.
 There is a minimax agent class that you can inherit from and define your own heuristic, move ordering, etc. 
 We use `cffi` to optimize the game class so that minimax can run at a decent speed. Specifically, determining
 the legal moves requires the a tree search, so we have implemented this function in C.
-=======
 
