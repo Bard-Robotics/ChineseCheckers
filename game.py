@@ -1,3 +1,4 @@
+from typing import TYPE_CHECKING
 import numpy as np
 
 class CheckersGame():
@@ -15,7 +16,6 @@ class CheckersGame():
         self._board = np.copy(board)
         self.winner = None
         self.player_turn = to_move
-
 
     def move(self, start, end, verify=True) -> None:
         """
@@ -114,6 +114,8 @@ class CheckersGame():
         to_visit = [start]
         while len(to_visit):
             pt = to_visit.pop(0)
+            if pt in visited:
+                continue
 
             # We have to actually move a piece
             # But this stops us from considering "start" even if we can
@@ -129,6 +131,7 @@ class CheckersGame():
                         if self.board(over) > 0
                         and self.board(dest) == 0
                         and dest not in visited
+                        and over != start
                 )
     
     def exists_path(self, start, end):
@@ -166,7 +169,6 @@ class CheckersGame():
         #   another player's spawn or goal
         if start_zone == goal or end_zone == color:
             return False
-
         return True
 
     def _index_on_board(self, point):
@@ -182,6 +184,17 @@ class CheckersGame():
         return '\n'.join(
                 ''.join("o" if i == 0 else str(i) for i in row)
                 for row in b)
+
+    def __hash__(self):
+        """
+        The hash of a game consists of the board state plus whose turn it is.
+        """
+        return hash((self._board.tobytes(), self.player_turn))
+        
+    def __eq__(self, other):
+        if isinstance(other, CheckersGame):
+            return np.array_equal(self._board, other._board) and self.player_turn == other.player_turn
+        return NotImplemented
 
 # Fixed board layout
 _BOARD_STR = """\

@@ -8,7 +8,9 @@ Chinese Checkers playground for AIs, with multiplayer online evaluation mode.
 - Figure out standards for our online server.
 
 ## HTTP Api Documentation:
-The API uses JSON and a very simple token-based authentication system.
+The API uses JSON and a very simple token-based authentication system. 
+
+Note that the number of players has been locked at 2 in the game logic, but I haven't gotten around to updating the server. Sorry.
 
 #### Creating a room:
 ```http
@@ -88,3 +90,11 @@ If the token is not provided correctly, returns `401`.
 If the token doesn't match the player whose turn it is, or if the game is over or hasn't started, returns `403`.  
 If the specified move is illegal, returns `400`.  
 On success, returns `200` and no body.
+
+## Python Library
+
+Another way to use this library is to run offline CPU tournaments.
+
+There is a minimax agent class that you can inherit from and define your own heuristic, move ordering, etc. 
+We use `cffi` to optimize the game class so that minimax can run at a decent speed. Specifically, determining
+the legal moves requires the a tree search, so we have implemented this function in C.
