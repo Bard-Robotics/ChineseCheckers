@@ -1,18 +1,38 @@
 # Chinese Checkers
 Chinese Checkers playground for AIs, with multiplayer online evaluation mode.
 
-## Objectives: 
-- Learn how use git 
-- Write Game Server
-  - Language (JS, Python)
-- Figure out standards for our online server.
+### Prequisite
+- Git and Github
+- Python 
+- Flask, numpy, request library for useful purposes
+- Basic understanding of http requests + client/server relationship (conceptual)
 
 ## HTTP Api Documentation:
 The API uses JSON and a very simple token-based authentication system. 
 
 Note that the number of players has been locked at 2 in the game logic, but I haven't gotten around to updating the server. Sorry.
+=======
+## Running the game 
+Download the repository, enter from the command line and run command ```python server.py```. This will give you a web address running on your local server that looks like ```http://127.0.0.1:5000/```, paste it in a web browser to view the game board. 
 
-#### Creating a room:
+To interact with the server, get the room number ```ROOM_ID``` and web address ```HOST```. Run a client program (recommend using python or js) using the HTTP API to send requests to the game board. Here's a small sample program using the requests library in Python to move on checker piece.
+
+```python
+import requests 
+roomid = "RGSHR"  # {GAME_ID}
+HOST = "http:" # {HOST}
+
+auth = requests.post(f"{HOST}/api/game/{roomid}/join")
+token = auth.json()["token"]
+
+requests.post(
+    f"{HOST}/api/game/{roomid}/move", 
+    headers={"Authorizatoin":f"Bearer{token}"}, 
+    json={   "move":{"start":[13,10],"end":[12,10]} }
+) 
+```
+
+#### Creating a room
 ```http
 POST /api/game/create
 
@@ -24,7 +44,7 @@ POST /api/game/create
 Returns `400` if the number of players isn't specified (the turn time limit is optional).
 On success, returns a redirect to the newly created room.
 
-#### Joining a room:
+#### Joining a room
 ```http
 POST /api/game/<ROOM_ID>/join
 ```
@@ -48,7 +68,7 @@ The *player* index is which player you are, in turn order. See the following tab
 
 So if you are assigned the index `2` in a 4-player game, then your pieces are colored `4`.
 
-#### Getting the state of a game:
+#### Getting the state of a game
 ```http
 GET /api/game/<ROOM_ID>
 ```
@@ -75,7 +95,7 @@ The `board` is a 2D array indicating the current location of all pieces, with el
 |   0   | Empty square              |
 |  1-6  | Player-movable game piece |
 
-#### Making a move:
+#### Making a move
 ```http
 POST /api/game/<ROOM_ID>/move
 Authorization: Bearer <TOKEN>
@@ -98,3 +118,5 @@ Another way to use this library is to run offline CPU tournaments.
 There is a minimax agent class that you can inherit from and define your own heuristic, move ordering, etc. 
 We use `cffi` to optimize the game class so that minimax can run at a decent speed. Specifically, determining
 the legal moves requires the a tree search, so we have implemented this function in C.
+=======
+
