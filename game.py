@@ -16,6 +16,7 @@ class CheckersGame():
         self._board = np.copy(board)
         self.winner = None
         self.player_turn = to_move
+        self.history = []
 
     def move(self, start, end, verify=True) -> None:
         """
@@ -56,6 +57,19 @@ class CheckersGame():
             # Otherwise it's the next player's turn
             self.player_turn = CheckersGame.opposite[self.player_turn]
 
+        self.history.append((start, end))
+
+    def _unmove(self):
+        """
+        'unmake' a recent move. Don't do this please.
+        """
+        (start, end) = self.history.pop()
+        self._board[start] = self._board[end]
+        self._board[end] = 0
+        self.winner = None
+        self.player_turn = CheckersGame.opposite[self.player_turn]
+        
+
     def is_legal(self, start, end) -> bool:
         """Determines whether a move is legal.
            Does not check turn order.
@@ -80,12 +94,12 @@ class CheckersGame():
                     player (int): Index of the player who is moving.
 
                 Returns:
-                    A generator yielding dicts of the form {"start": (y0, x0), "end": (y1, x1)}.
+                    A generator yielding tuples of the form ((y0, x0), (y1, x1)).
 
         """
         for start in map(tuple, np.argwhere(self._board == player)):
             yield from (
-                    {"start": start, "end": end}
+                    (start, end)
                     for end in self.paths(start)
                     if self._check_zone_locks(start, end)
                 )
@@ -145,7 +159,7 @@ class CheckersGame():
            be forbidden from moving to a certain spot,
            regardless of whether there is a path.
            This method checks those conditions.
-
+(for all we know!).
            returns:
                True if the move might be allowed,
                False if the move is forbidden.
@@ -188,10 +202,14 @@ class CheckersGame():
     def __hash__(self):
         """
         The hash of a game consists of the board state plus whose turn it is.
+        PLEASE NOTE: The CheckersGame class is MUTABLE.
         """
         return hash((self._board.tobytes(), self.player_turn))
         
     def __eq__(self, other):
+        """
+        PLEASE NOTE: THe CheckersGame class is MUTABLE.
+        """
         if isinstance(other, CheckersGame):
             return np.array_equal(self._board, other._board) and self.player_turn == other.player_turn
         return NotImplemented
