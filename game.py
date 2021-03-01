@@ -48,7 +48,7 @@ class CheckersGame():
         # Is the destination in a home zone?
         if (FULL_BOARD[end] > 0
             # Is the home zone full?
-            and all(self._board[i] > 0 for i in START_ZONES[CheckersGame.opposite[self.player_turn]])):
+            and np.all(self._board[START_ZONES[CheckersGame.opposite[self.player_turn]]])):
                 # Then the game is over, and the winner is whoever's goal zone is full
                 # This rule prevents blocking: if you sit in an opponent's goal zone,
                 #   then your piece counts towards their completion.
@@ -229,10 +229,7 @@ FULL_BOARD = np.array(
     [[ int(c) for c in r] for r in _BOARD_STR.splitlines()],
     dtype=np.int8)
 
-START_ZONES = [[] for _ in range(3)]
-for ind in np.ndindex(FULL_BOARD.shape):
-    col = FULL_BOARD[ind]
-    START_ZONES[col].append(ind)
+START_ZONES = [np.nonzero(FULL_BOARD == p) for p in range(3)]
 
 DIRECTIONS = [
     (-1, 0),
