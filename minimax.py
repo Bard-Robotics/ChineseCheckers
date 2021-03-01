@@ -16,12 +16,11 @@ class MiniMaxer():
 
     def find_move(self, board: game.CheckersGame, depth: int):
         board_copy = game.CheckersGame(board._board, board.player_turn)
-        #move = None
-        #val = 0
-       # 
-        #for d in range(1, depth+1):
-        #    (val, move) = self.minimax(board_copy, d)
-        (val, move) = self.minimax(board_copy, depth)
+        move = None
+        val = 0
+        
+        for d in range(1, depth+1):
+            (val, move) = self.minimax(board_copy, d)
         print(f"Player {board.player_turn} has advantage of {val}")
         return move
 
@@ -34,11 +33,11 @@ class MiniMaxer():
 
     def _minimax(self, board: game.CheckersGame,
             alpha: int, beta: int, depth: int) -> Tuple[int, Union[Move, None]]:
-        """
+        
         # Transposition Table lookup
         alpha_orig = alpha
         # Lookup in the table
-        key = hash(board)
+        key = board.hash()
         tt = self.transposition_table.get(key)
         if tt is not None and tt.depth >= depth:
             if tt.flag == Transposition.EXACT:
@@ -50,19 +49,19 @@ class MiniMaxer():
 
             if alpha >= beta:
                 return (tt.value, tt.principal)
-        """
+        
         if board.winner is not None or depth == 0:
             score =  self.score(board)
             return (score if board.player_turn == 1 else -score, None)
 
         # legal_moves is a wrapper around a cffi function
         moves = legal_moves(board)
-        """
+        
         # Put the principal move first
         if tt is not None and tt.principal is not None:
             principal_index = moves.index(tt.principal)
             moves = [tt.principal] + moves[:principal_index] + moves[principal_index+1:]
-        """
+        
         # This routine can probably be optimized.
         # Negamax with alpha-beta pruning
         value = -WIN_VALUE * 2
@@ -84,7 +83,7 @@ class MiniMaxer():
                 # Record cutoff?
                 break
 
-        """
+        
         # Transposition Table store
         flag = Transposition.EXACT
         if value <= alpha_orig:
@@ -93,7 +92,7 @@ class MiniMaxer():
             flag = Transposition.LOWER
 
         self.transposition_table[key] = Transposition(value, depth, flag, best_move)
-        """
+        
         return (value, best_move)
 
 
@@ -130,9 +129,9 @@ class MiniMaxer():
         Override this method in your subclass! You should try to achieve a tradeoff between evaluation accuracy and runtime.
         """
         # Naive heuristic: player 1 wants to minimize the coordinates of all pieces.
-        pieces = np.argwhere(board._board)
+        (y, x) = np.nonzero(board._board)
         # Type checker isn't smart enough to figure out that the sum of an int array is an int
-        return 160 - pieces.sum() # type: ignore
+        return 160 - (np.sum(y) + np.sum(x)) # type: ignore
 
 
     def order(self, board: game.CheckersGame, moves: List[Move]) -> List[Move]:

@@ -48,14 +48,13 @@ class CheckersGame():
         # Is the destination in a home zone?
         if (FULL_BOARD[end] > 0
             # Is the home zone full?
-            and all(self._board[i] > 0 for i in START_ZONES[self.player_turn])):
+            and all(self._board[i] > 0 for i in START_ZONES[CheckersGame.opposite[self.player_turn]])):
                 # Then the game is over, and the winner is whoever's goal zone is full
                 # This rule prevents blocking: if you sit in an opponent's goal zone,
                 #   then your piece counts towards their completion.
                 self.winner = self.player_turn
-        else:
-            # Otherwise it's the next player's turn
-            self.player_turn = CheckersGame.opposite[self.player_turn]
+        # it's the next player's turn
+        self.player_turn = CheckersGame.opposite[self.player_turn]
 
         self.history.append((start, end))
 
@@ -199,7 +198,7 @@ class CheckersGame():
                 ''.join("o" if i == 0 else str(i) for i in row)
                 for row in b)
 
-    def __hash__(self):
+    def hash(self):
         """
         The hash of a game consists of the board state plus whose turn it is.
         PLEASE NOTE: The CheckersGame class is MUTABLE.
